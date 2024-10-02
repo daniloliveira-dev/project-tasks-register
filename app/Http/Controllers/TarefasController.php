@@ -12,17 +12,8 @@ class TarefasController extends Controller
      */
     public function index()
     {
-        sleep(2);
         $tasks = Tarefa::all();
-        return Inertia("Homepage", compact("tasks"));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return inertia("Create");
+        return $tasks;
     }
 
     /**
@@ -35,21 +26,7 @@ class TarefasController extends Controller
             "description" => $request->description,
             "data_criacao" => date("y-m-d")
         ]);
-        return redirect()->route("home.index");
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $task = Tarefa::find($id);
-        return Inertia("Edit", compact("task"));
+        return response()->json(["response" => "Task criada com sucesso"], 200);
     }
 
     /**
@@ -62,8 +39,7 @@ class TarefasController extends Controller
             "task" => $request->task,
             "description" => $request->description
         ]);
-
-        return redirect()->route("home.index")->with("message", "Tarefa atualizada com sucesso.");
+        return response()->json(["response" => "Task alterada com sucesso"], 200);
     }
 
     /**
@@ -73,7 +49,6 @@ class TarefasController extends Controller
     {
         $tarefa = Tarefa::find($id);
         $tarefa->delete();
-
-        return redirect()->route("home.index")->with("message", "Tarefa excluída com sucesso");
+        return response()->json(["response" => "Task deletada com sucesso"], 200);
     }
 }

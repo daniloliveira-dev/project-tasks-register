@@ -2,25 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Usuarios;
 use Illuminate\Http\Request;
 
-class UsuariosController extends Controller
+class ViewController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia("Login");
-    }
-
-    public function auth(Request $request)
-    {
-        if (Usuarios::where(isset($request->email))->where(isset($request->password))) {
-
-            return redirect()->with("message", "Logado com sucesso");
-        }
+        return inertia("Homepage");
     }
 
     /**
@@ -28,7 +19,7 @@ class UsuariosController extends Controller
      */
     public function create()
     {
-        return Inertia("Register");
+        return inertia("Create");
     }
 
     /**
@@ -36,19 +27,7 @@ class UsuariosController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            "name" => "required|min: 3",
-            "email" => "required|email:rfc",
-            "password" => "required|min:6",
-            "user" => "required|min: 3"
-        ]);
-
-        if ($validate) {
-            Usuarios::create($request->all());
-            return redirect()->route("homepage")->with("message", "Usuário criado com sucesso.");
-        } else {
-            return redirect()->route("auth")->with("message", "Há campos que não foram preenchidos");
-        }
+        //
     }
 
     /**

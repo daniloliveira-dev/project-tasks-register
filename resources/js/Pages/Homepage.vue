@@ -85,6 +85,18 @@ th {
 }
 </style>
 
+<script setup>
+import axios from 'axios';
+import { ref } from "vue";
+
+const tasks = ref();
+axios.get("/api/home").then((response) => {
+
+    tasks.value = response.data;
+});
+
+</script>
+
 <template>
 
     <Head title="Tarefas do dia"></Head>
@@ -117,7 +129,7 @@ th {
                         <Link :href="route('home.edit', task.id)">
                         <button type="submit" class="btn-editar">Editar</button>
                         </Link>
-                        <button type="submit" class="btn-excluir">Excluir</button>
+                        <button @click="destroy(task.id)" type="submit" class="btn-excluir">Excluir</button>
                     </div>
                 </td>
             </tr>
@@ -127,14 +139,32 @@ th {
 
 <script>
 
-import { Link, Head } from "@inertiajs/vue3";
+import { Link, Head, router } from "@inertiajs/vue3";
 export default {
+
     props: {
         tasks: Object
     },
     components: {
         Head,
         Link
+    },
+
+    data() {
+
+        const destroy = (id) => {
+            if (confirm("Tem certeza que deseja excluir?")) {
+                const deleteTask = ref();
+                axios.delete('/api/delete/' + id).then((response) => {
+
+                    deleteTask.value = response.data;
+                });
+            }
+        }
+
+        return {
+            destroy
+        }
     }
 }
 </script>
