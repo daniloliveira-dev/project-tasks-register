@@ -63,7 +63,7 @@ body {
 
 <template>
 
-    <Head title="Criar Tarefa">
+    <Head title="Editar Tarefa">
     </Head>
 
     <div class="action-buttons">
@@ -72,7 +72,7 @@ body {
 
     <div class="form-container">
         <h1>Editar Tarefa</h1>
-        <form @submit.prevent="form.put(route('home.update', task.id))">
+        <form @submit.prevent="form.put()">
             <div class="form-group">
                 <label for="task">Tarefa</label>
                 <input v-model="form.task" type="text" id="task" name="task" required>
@@ -80,8 +80,7 @@ body {
                 <label for="description">Descrição</label>
                 <textarea v-model="form.description" id="description" name="description" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn-criar-tarefa">Editar Tarefa</button>
-
+            <button @click="update(task.id)" type="submit" class="btn-criar-tarefa">Editar Tarefa</button>
         </form>
     </div>
 
@@ -90,6 +89,8 @@ body {
 <script>
 
 import { Link, Head, useForm } from "@inertiajs/vue3"
+import axios from "axios";
+import { ref } from "vue";
 export default {
 
     props: {
@@ -103,10 +104,23 @@ export default {
     },
 
     data(props) {
-        const form = useForm(props.task)
+
+        const form = {
+            task: props.task.task,
+            description: props.task.description
+        }
+
+        function update(id) {
+            const data = ref();
+            axios.put("/api/update/" + id, form).then((response) => {
+
+                data.value = response.data;
+            });
+        }
 
         return {
-            form
+            form,
+            update
         }
     }
 }

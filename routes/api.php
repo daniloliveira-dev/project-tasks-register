@@ -13,6 +13,7 @@ Route::middleware(AuthMiddleware::class)->controller(TarefasController::class)->
         Route::post("/register", [AuthController::class, "register"]);
 
         Route::get("/home", [TarefasController::class, "index"])->name("index");
+        Route::get("/find/{id}", [TarefasController::class, "find"])->name("find");
         Route::post("/store", [TarefasController::class, "store"])->name("store");
         Route::put("/update/{id}", [TarefasController::class, "update"])->name("update");
         Route::delete("/delete/{id}", [TarefasController::class, "destroy"])->name("destroy");

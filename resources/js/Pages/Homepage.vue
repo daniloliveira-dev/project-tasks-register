@@ -86,14 +86,6 @@ th {
 </style>
 
 <script setup>
-import axios from 'axios';
-import { ref } from "vue";
-
-const tasks = ref();
-axios.get("/api/home").then((response) => {
-
-    tasks.value = response.data;
-});
 
 </script>
 
@@ -139,7 +131,9 @@ axios.get("/api/home").then((response) => {
 
 <script>
 
-import { Link, Head, router } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
+import axios from 'axios';
+import { ref } from "vue";
 export default {
 
     props: {
@@ -162,8 +156,15 @@ export default {
             }
         }
 
+        const tasks = ref();
+        axios.get("/api/home").then((response) => {
+
+            tasks.value = response.data;
+        });
+
         return {
-            destroy
+            destroy,
+            tasks,
         }
     }
 }

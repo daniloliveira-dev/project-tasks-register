@@ -72,7 +72,7 @@ body {
 
     <div class="form-container">
         <h1>Criar Tarefa</h1>
-        <form @submit.prevent="form.post(route('home.store'))">
+        <form @submit.prevent="form.post()">
             <div class="form-group">
                 <label for="task">Tarefa</label>
                 <input v-model="form.task" type="text" id="task" name="task" required>
@@ -80,7 +80,7 @@ body {
                 <label for="description">Descrição</label>
                 <textarea v-model="form.description" id="description" name="description" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn-criar-tarefa">Criar Tarefa</button>
+            <button @click="create(form)" type="submit" class="btn-criar-tarefa">Criar Tarefa</button>
 
         </form>
     </div>
@@ -89,11 +89,13 @@ body {
 
 <script>
 
-import { Link, Head, useForm } from "@inertiajs/vue3"
+import { Link, Head, useForm, router } from "@inertiajs/vue3"
+import axios from "axios";
+import { ref } from "vue"
 export default {
 
     props: {
-        tasks: Object
+        task: Object
     },
 
     components: {
@@ -108,9 +110,20 @@ export default {
             "description": ""
         })
 
-        return {
-            form
+        function create(form) {
+            const create = ref()
+            axios.post("/api/store", form).then((response) => {
+
+                create.value = response.data;
+            });
         }
+
+        return {
+            form,
+            create
+        }
+
+
     }
 }
 </script>

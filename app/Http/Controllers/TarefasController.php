@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tarefa;
+use Exception;
 use Illuminate\Http\Request;
+
 
 class TarefasController extends Controller
 {
@@ -14,6 +16,18 @@ class TarefasController extends Controller
     {
         $tasks = Tarefa::all();
         return $tasks;
+    }
+
+    public function find($id)
+    {
+        $task = Tarefa::find($id);
+        if ($task) {
+
+            return response()->json(["response" => $task], 200);
+        }
+        return response()->json([
+            "response" => "Não foi encontrado nenhum resultado"
+        ], 200);
     }
 
     /**
@@ -32,14 +46,22 @@ class TarefasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $tarefa = Tarefa::find($id);
-        $tarefa->update([
-            "task" => $request->task,
-            "description" => $request->description
-        ]);
-        return response()->json(["response" => "Task alterada com sucesso"], 200);
+        try {
+            if ($tarefa) {
+
+                $tarefa->update([
+                    "task" => $request->task != "" ? $request->task : $tarefa->task,
+                    "description" => $request->description != "" ? $request->description : $tarefa->description
+                ]);
+                return response()->json(["response" => "Task alterada com sucesso"], 200);
+            }
+        } catch (Exception $e) {
+
+            return response()->json(["response" => "Alteração não foi feita"], 400);
+        }
     }
 
     /**
