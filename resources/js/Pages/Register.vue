@@ -1,59 +1,107 @@
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4CAF50 30%, #81C784 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    color: #333;
 }
 
 .register-container {
     background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    width: 350px;
     text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .register-container h2 {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: #4CAF50;
+}
+
+.register-container label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
 }
 
 .register-container input[type="text"],
 .register-container input[type="email"],
 .register-container input[type="password"] {
     width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 14px;
+    background-color: #f9f9f9;
 }
 
-.register-container input[type="submit"] {
+.register-container input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.register-container button[type="submit"] {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 4px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.register-container input[type="submit"]:hover {
+.register-container button[type="submit"]:hover {
     background-color: #45a049;
 }
 
 .register-container .message {
-    margin-top: 15px;
-    font-size: 14px;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.register-container .message button {
+    background-color: transparent;
+    border: none;
+    color: #4CAF50;
+    font-size: 15px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.register-container .message button:hover {
+    color: #388E3C;
 }
 
 .register-container .message a {
-    color: #4CAF50;
     text-decoration: none;
+    color: #4CAF50;
 }
 
 .register-container .message a:hover {
@@ -63,35 +111,43 @@ body {
 
 <template>
 
-    <Head title="Registrar Usuário"></Head>
+    <head>
+
+        <Head title="Registro - Tarefas do dia"></Head>
+    </head>
 
     <body>
         <div class="register-container">
             <h2>Registrar</h2>
-            <form @submit.prevent="form.post(route('new-user'))">
+            <form>
 
-                <input v-model="form.email" type="email" name="email" placeholder="Email" required>
-                <input v-model="form.user" type="text" name="username" placeholder="Usuário" required>
-                <input v-model="form.password" type="password" name="password" placeholder="Senha" required>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" required />
 
-                <Link :href="route('new-user')">
-                <input type="submit" value="Registrar" />
-                </Link>
+                <label for="username">Nome de Usuário</label>
+                <input type="text" name="username" id="username" required />
+
+                <label for="password">Senha</label>
+                <input type="password" name="password" id="password" required />
+
+                <button type="submit">Registrar</button>
             </form>
+
             <div class="message">
-                <p>Já tem uma conta?
-                    <Link :href='route("Login")'>Faça login aqui</Link>
-                </p>
+                <p>Já tem uma conta?</p>
+                <Link :href="route('login')">
+                <button>Faça login aqui</button>
+                </Link>
             </div>
         </div>
     </body>
+
 </template>
 
 <script>
+import { Link, Head, useForm } from '@inertiajs/vue3';
 
-import { Link, Head, useForm } from '@inertiajs/vue3'
 export default {
-
     components: {
         useForm,
         Head,
@@ -99,18 +155,19 @@ export default {
     },
 
     data() {
+        const form = useForm({
+            email: '',
+            password: ''
+        });
 
-        const form = {
-            email: "",
-            user: "",
-            password: "",
+        function register() {
 
         }
 
         return {
-            form
-        }
+            form,
+            register
+        };
     }
-
-}
+};
 </script>

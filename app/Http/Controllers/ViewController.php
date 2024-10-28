@@ -19,17 +19,20 @@ class ViewController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($token)
     {
-        return inertia("Create");
+        return inertia("Create", $token);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id, $token)
     {
         $task = Tarefa::find($id);
-        return inertia("Edit", compact("task"));
+        return inertia("Edit", [
+            compact("task"),
+            $token
+        ]);
     }
 }

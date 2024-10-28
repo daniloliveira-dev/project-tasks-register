@@ -1,59 +1,106 @@
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4CAF50 30%, #81C784 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    color: #333;
 }
 
 .login-container {
     background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    width: 320px;
     text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .login-container h2 {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: #4CAF50;
 }
 
-.login-container input[type="text"],
+.login-container label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
 .login-container input[type="email"],
 .login-container input[type="password"] {
     width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 14px;
+    background-color: #f9f9f9;
 }
 
-.login-container input[type="submit"] {
+.login-container input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.login-container button[type="submit"] {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 4px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.login-container input[type="submit"]:hover {
+.login-container button[type="submit"]:hover {
     background-color: #45a049;
 }
 
 .login-container .message {
-    margin-top: 15px;
-    font-size: 14px;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.login-container .message button {
+    background-color: transparent;
+    border: none;
+    color: #4CAF50;
+    font-size: 15px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.login-container .message button:hover {
+    color: #388E3C;
 }
 
 .login-container .message a {
-    color: #4CAF50;
     text-decoration: none;
+    color: #4CAF50;
 }
 
 .login-container .message a:hover {
@@ -71,18 +118,19 @@ body {
     <body>
         <div class="login-container">
             <h2>Login</h2>
-            <form @submit.prevent="form.post(route('auth'))">
-
+            <form @submit.prevent=(form.post(login()))>
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" v-model="form.email" />
+                <input type="email" name="email" id="email" v-model="form.email" required />
 
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" v-model="form.password" />
-                <Link :href="route('auth')"> <input type="submit" value="Entrar"></Link>
+                <input type="password" name="password" id="password" v-model="form.password" required />
 
+                <button type="submit">Logar</button>
             </form>
+
             <div class="message">
-                <Link :href="route('Register')">Registre-se aqui</Link>
+                <p>Não tem uma conta?</p>
+                <Link :href="route('register')"><button>Registre-se aqui</button></Link>
             </div>
         </div>
     </body>
@@ -90,27 +138,55 @@ body {
 </template>
 
 <script>
-
-import { Link, Head, useForm } from '@inertiajs/vue3'
+import Cookies from "js-cookie"
+import { router, Link, Head, useForm } from '@inertiajs/vue3';
+import axios from 'axios';
+import { ref } from "vue"
 
 export default {
 
     components: {
         useForm,
         Head,
-        Link
+        Link,
+        router
     },
 
     data() {
-
         const form = useForm({
-            email: "",
-            password: ""
-        })
+            email: useForm.email,
+            password: useForm.password
+        });
+
+        function redirect(token) {
+            axios({
+                method: "get",
+                url: "/home/",
+                headers: {
+                    Authorization: token
+                }
+            }).then(response => response.data
+            )
+        }
+
+        function login() {
+            axios({
+                method: "post",
+                url: "/api/login",
+                data: {
+                    email: form.email,
+                    password: form.password
+                }
+            }).then(response => response.data
+            ).then(res => {
+                Cookies.set("_token", res.access_token)
+            })
+        }
 
         return {
-            form
-        }
+            form,
+            login
+        };
     }
-}
+};
 </script>

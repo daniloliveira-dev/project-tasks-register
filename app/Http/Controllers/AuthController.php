@@ -39,16 +39,15 @@ class AuthController extends Controller
         $input = $request->validated();
         $credentials = $input;
 
-        if (! $token = auth()->attempt($credentials)) {
+        if ($token = auth()->attempt($credentials)) {
 
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ]);
         }
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     public function logout()
