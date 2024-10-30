@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
 
-    public function register(Request $request)
+    public static function register(Request $request)
     {
 
         try {
@@ -34,7 +34,7 @@ class AuthController extends Controller
         }
     }
 
-    public function login(LoginRequest $request)
+    public static function login(LoginRequest $request)
     {
         $input = $request->validated();
         $credentials = $input;
@@ -50,7 +50,7 @@ class AuthController extends Controller
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
-    public function logout()
+    public static function logout()
     {
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);

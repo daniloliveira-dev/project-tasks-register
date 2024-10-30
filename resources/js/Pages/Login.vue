@@ -138,10 +138,8 @@ body {
 </template>
 
 <script>
-import Cookies from "js-cookie"
 import { router, Link, Head, useForm } from '@inertiajs/vue3';
 import axios from 'axios';
-import { ref } from "vue"
 
 export default {
 
@@ -158,17 +156,6 @@ export default {
             password: useForm.password
         });
 
-        function redirect(token) {
-            axios({
-                method: "get",
-                url: "/home/",
-                headers: {
-                    Authorization: token
-                }
-            }).then(response => response.data
-            )
-        }
-
         function login() {
             axios({
                 method: "post",
@@ -177,9 +164,15 @@ export default {
                     email: form.email,
                     password: form.password
                 }
-            }).then(response => response.data
-            ).then(res => {
-                Cookies.set("_token", res.access_token)
+            }).then(response => {
+                if (response.data.access_token) {
+                    localStorage.setItem("_token", response.data.access_token)
+                    console.log(router.get("/home", "", {
+                        headers: {
+                            Authorization: "Bearer" + localStorage.setItem("_token", response.data.access_token)
+                        }
+                    }))
+                }
             })
         }
 

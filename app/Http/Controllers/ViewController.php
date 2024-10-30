@@ -11,6 +11,22 @@ class ViewController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function login()
+    {
+        return inertia("Login");
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function register()
+    {
+        return inertia("Register");
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         return inertia("Homepage");

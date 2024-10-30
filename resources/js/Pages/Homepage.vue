@@ -157,10 +157,7 @@ export default {
         }
 
         const tasks = ref();
-        axios.get("/api/home").then((response) => {
-
-            tasks.value = response.data;
-        });
+        console.log(localStorage.getItem("_token"))
 
         return {
             destroy,

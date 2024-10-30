@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Models\User;
+use App\Http\Controllers\AuthController;
+use Exception;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    public function index()
+
+    public function login(LoginRequest $request)
     {
-        return inertia("Login");
+        try {
+
+            return AuthController::login($request);
+        } catch (Exception $e) {
+
+            return response()->json(["error" => $e]);
+        }
     }
 
-    public function register()
+    public function logout()
     {
-        return inertia("Register");
+        auth()->logout(true);
+        return response()->json(['message' => 'Successfully logged out']);
     }
 }
