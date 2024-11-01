@@ -94,7 +94,7 @@ th {
     <Head title="Tarefas do dia"></Head>
 
     <div class="top-bar">
-        <button onclick="location.href='#'">Logout</button>
+        <button @click="logout()">Logout</button>
     </div>
     <h1>Tarefas do dia</h1>
     <div class="action-buttons">
@@ -133,7 +133,7 @@ th {
 
 import { Link, Head } from "@inertiajs/vue3";
 import axios from 'axios';
-import { ref } from "vue";
+import { ref } from "vue"
 export default {
 
     props: {
@@ -141,27 +141,54 @@ export default {
     },
     components: {
         Head,
-        Link
+        Link,
     },
 
     data() {
 
+        const tasks = ref();
+        let token = localStorage.getItem('_token')
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+
         const destroy = (id) => {
             if (confirm("Tem certeza que deseja excluir?")) {
-                const deleteTask = ref();
                 axios.delete('/api/delete/' + id).then((response) => {
-
-                    deleteTask.value = response.data;
+                    if (response.status == 200) {
+                        alert(response.data.response)
+                        this.$inertia.visit('/home')
+                    } else {
+                        alert("Houve um erro ao tentar deletar uma tarefa.")
+                    }
                 });
             }
         }
 
-        const tasks = ref();
-        console.log(localStorage.getItem("_token"))
+        const logout = () => {
+            localStorage.clear("_token")
+            if (localStorage.getItem(undefined) == null) {
+                alert("Você está deslogado")
+                this.$inertia.visit('/')
+            }
+        }
+
+        // Show Tasks //
+        if (token) {
+            axios.get('api/home').then((response) => {
+                tasks.value = response.data
+            })
+        } else {
+            if (localStorage.getItem(undefined) == null) {
+                alert("Você está deslogado")
+                this.$inertia.visit('/')
+            }
+        }
+
+        console.log(tasks)
 
         return {
             destroy,
             tasks,
+            logout
         }
     }
 }

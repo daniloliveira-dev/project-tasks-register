@@ -89,7 +89,7 @@ body {
 
 <script>
 
-import { Link, Head, useForm, router } from "@inertiajs/vue3"
+import { Link, Head, useForm } from "@inertiajs/vue3"
 import axios from "axios";
 import { ref } from "vue"
 export default {
@@ -110,11 +110,15 @@ export default {
             "description": ""
         })
 
-        function create(form) {
-            const create = ref()
-            axios.post("/api/store", form).then((response) => {
+        const create = (form) => {
 
-                create.value = response.data;
+            axios.post("/api/store", form).then((response) => {
+                if (response.status == 200) {
+                    alert(response.data.response);
+                    this.$inertia.visit('/home')
+                } else {
+                    alert("Houve um erro ao tentar executar a criação de uma nova task")
+                }
             });
         }
 
@@ -122,8 +126,6 @@ export default {
             form,
             create
         }
-
-
     }
 }
 </script>

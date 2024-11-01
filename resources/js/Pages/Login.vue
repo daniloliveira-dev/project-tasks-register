@@ -138,7 +138,7 @@ body {
 </template>
 
 <script>
-import { router, Link, Head, useForm } from '@inertiajs/vue3';
+import { Link, Head, useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 
 export default {
@@ -147,7 +147,6 @@ export default {
         useForm,
         Head,
         Link,
-        router
     },
 
     data() {
@@ -156,7 +155,7 @@ export default {
             password: useForm.password
         });
 
-        function login() {
+        const login = () => {
             axios({
                 method: "post",
                 url: "/api/login",
@@ -167,13 +166,14 @@ export default {
             }).then(response => {
                 if (response.data.access_token) {
                     localStorage.setItem("_token", response.data.access_token)
-                    console.log(router.get("/home", "", {
-                        headers: {
-                            Authorization: "Bearer" + localStorage.setItem("_token", response.data.access_token)
-                        }
-                    }))
+                    this.$inertia.visit('/home')
                 }
             })
+        }
+
+        if (localStorage.getItem("_token") !== null) {
+
+            this.$inertia.visit("/home")
         }
 
         return {

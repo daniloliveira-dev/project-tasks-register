@@ -110,11 +110,15 @@ export default {
             description: props.task.description
         }
 
-        function update(id) {
+        const update = (id) => {
             const data = ref();
             axios.put("/api/update/" + id, form).then((response) => {
 
                 data.value = response.data;
+                if (response.status == 200) {
+                    alert(response.data.response)
+                    this.$inertia.visit('/home')
+                }
             });
         }
 

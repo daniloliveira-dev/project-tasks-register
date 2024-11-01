@@ -15,7 +15,7 @@ class TarefasController extends Controller
     public function index()
     {
         $tasks = Tarefa::all();
-        return $tasks;
+        return response()->json($tasks);
     }
 
     public function find($id)
