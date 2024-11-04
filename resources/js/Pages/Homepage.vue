@@ -154,7 +154,6 @@ export default {
             if (confirm("Tem certeza que deseja excluir?")) {
                 axios.delete('/api/delete/' + id).then((response) => {
                     if (response.status == 200) {
-                        alert(response.data.response)
                         this.$inertia.visit('/home')
                     } else {
                         alert("Houve um erro ao tentar deletar uma tarefa.")
@@ -166,7 +165,7 @@ export default {
         const logout = () => {
             localStorage.clear("_token")
             if (localStorage.getItem(undefined) == null) {
-                alert("Você está deslogado")
+                alert("Deslogado")
                 this.$inertia.visit('/')
             }
         }
@@ -178,7 +177,7 @@ export default {
             })
         } else {
             if (localStorage.getItem(undefined) == null) {
-                alert("Você está deslogado")
+                alert("Deslogado")
                 this.$inertia.visit('/')
             }
         }

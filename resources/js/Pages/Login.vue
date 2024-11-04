@@ -166,7 +166,7 @@ export default {
             }).then(response => {
                 if (response.data.access_token) {
                     localStorage.setItem("_token", response.data.access_token)
-                    this.$inertia.visit('/home')
+                    console.log(this.$inertia.visit('/home'))
                 }
             })
         }
